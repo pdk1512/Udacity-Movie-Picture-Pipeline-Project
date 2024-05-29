@@ -21,13 +21,14 @@ jobs:
         node-version: [16, 18, 20]
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './starter/frontend/package-lock.json'
 
     - name: Install dependencies & Run tests
       run: |
@@ -45,13 +46,14 @@ jobs:
         node-version: [16, 18, 20]
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './starter/frontend/package-lock.json'
 
     - name: Install dependencies & Running linter
       run: |
