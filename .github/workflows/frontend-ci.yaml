@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Front-end CI
 
 on:
   pull_request:
@@ -23,12 +23,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Nodejs
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './starter/frontend/package-lock.json'
 
     - name: Install dependencies & Run tests
       run: |
@@ -48,12 +47,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Nodejs
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './starter/frontend/package-lock.json'
 
     - name: Install dependencies & Running linter
       run: |
