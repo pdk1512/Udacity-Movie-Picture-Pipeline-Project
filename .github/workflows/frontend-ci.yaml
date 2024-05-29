@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-lint:
+  lint:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,7 +34,7 @@ lint:
         npm install
         npm ci
         npm run lint
-        
+
   test:
     runs-on: ubuntu-latest
     defaults:
