@@ -10,6 +10,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./starter/frontend
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Nodejs
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies & Running linter
+      run: |
+        npm install
+        npm ci
+        npm run lint
+        
   test:
     runs-on: ubuntu-latest
     defaults:
@@ -31,32 +56,9 @@ jobs:
 
     - name: Install dependencies & Run tests
       run: |
+        npm install
         npm ci
         npm run test
-
-  lint:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./starter/frontend
-    strategy:
-      matrix:
-        node-version: [16, 18, 20]
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Nodejs
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: Install dependencies & Running linter
-      run: |
-        npm ci
-        npm run lint
 
   build:
     name: Build
