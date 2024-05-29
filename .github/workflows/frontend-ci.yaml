@@ -1,42 +1,16 @@
-name: Front-end CI
+name: Node.js CI
 
 on:
   pull_request:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./starter/frontend
-    strategy:
-      matrix:
-        node-version: [14, 16, 18]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-        exclude:
-          - platform: macos-latest
-            node-version: 14
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: Install dependencies & Running linter
-      run: |
-        npm ci
-        npm run lint
-
   test:
-    name: Test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -44,11 +18,7 @@ jobs:
         working-directory: ./starter/frontend
     strategy:
       matrix:
-        node-version: [14, 16, 18]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-        exclude:
-          - platform: macos-latest
-            node-version: 14
+        node-version: [16, 18, 20]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -63,6 +33,30 @@ jobs:
       run: |
         npm ci
         npm run test
+
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./starter/frontend
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies & Running linter
+      run: |
+        npm ci
+        npm run lint
 
   build:
     name: Build
