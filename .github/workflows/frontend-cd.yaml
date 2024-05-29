@@ -76,12 +76,12 @@ jobs:
     - name: Build, tag image and push to ecr
       env:
         IMAGE_NAME: frontend
-        IMAGE_TAG: latest
         APP_MOVIE_API_URL: http://localhost:5000
       run: |
+        IMAGE_TAG=${{ github.sha::7 }}
         docker build -t ${{ env.IMAGE_NAME }} --build-arg=REACT_APP_MOVIE_API_URL=${{ env.APP_MOVIE_API_URL }} .
-        docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-        docker push ${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        docker tag ${{ env.IMAGE_NAME }}:$IMAGE_TAG ${{ secrets.FRONTEND_ECR_REPOSITORY }}:$IMAGE_TAG
+        docker push ${{ secrets.FRONTEND_ECR_REPOSITORY }}:$IMAGE_TAG
 
   deploy:
     runs-on: ubuntu-latest
@@ -109,9 +109,8 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Deploy kubernetes manifests
-      env:
-        IMAGE_TAG: latest
       run: |
         cd ./starter/frontend/k8s
-        kustomize edit set image frontend=${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        IMAGE_TAG=${{ github.sha::7 }}
+        kustomize edit set image frontend=${{ secrets.FRONTEND_ECR_REPOSITORY }}:$IMAGE_TAG
         kustomize build | kubectl apply -f -

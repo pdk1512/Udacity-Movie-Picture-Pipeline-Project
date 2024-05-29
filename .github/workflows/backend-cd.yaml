@@ -76,11 +76,11 @@ jobs:
     - name: Build, tag image and push to ecr
       env:
         IMAGE_NAME: backend
-        IMAGE_TAG: latest
       run: |
+        IMAGE_TAG=${{ github.sha::7 }}
         docker build -t ${{ env.IMAGE_NAME }} .
-        docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-        docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        docker tag ${{ env.IMAGE_NAME }}:$IMAGE_TAG ${{ secrets.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
+        docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
 
   deploy:
     runs-on: ubuntu-latest
@@ -108,9 +108,8 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Deploy kubernetes manifests
-      env:
-        IMAGE_TAG: ${{ github.sha }}
       run: |
         cd ./starter/backend/k8s
-        kustomize edit set image backend=${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        IMAGE_TAG=${{ github.sha::7 }}
+        kustomize edit set image backend=${{ secrets.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
         kustomize build | kubectl apply -f -
