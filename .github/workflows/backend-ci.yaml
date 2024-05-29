@@ -1,6 +1,7 @@
-name: Back-end CI
+name: Backend Continuous Integration
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -60,10 +61,10 @@ jobs:
         shell: bash
         working-directory: ./starter/backend
     env:
-      AWS_ECR_REPOSITORY: mp-frontend:latest
+      IMAGE_NAME: backend-ci
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
     - name: Build image
-      run: docker build -t ${{ env.AWS_ECR_REPOSITORY }} .
+      run: docker build -t ${{ env.IMAGE_NAME }} .
