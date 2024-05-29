@@ -61,7 +61,7 @@ jobs:
         shell: bash
         working-directory: ./starter/backend
     env:
-      IMAGE_NAME: backend-ci-test
+      IMAGE_NAME: backend-ci
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
