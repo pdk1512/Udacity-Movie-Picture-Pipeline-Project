@@ -18,7 +18,7 @@ jobs:
         working-directory: ./starter/frontend
     strategy:
       matrix:
-        node-version: [16, 18, 20]
+        node-version: [18]
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -27,8 +27,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache-dependency-path: './starter/frontend/package-lock.json'
-        cache: 'npm'
 
     - name: Install dependencies & Running linter
       run: |
@@ -43,7 +41,7 @@ jobs:
         working-directory: ./starter/frontend
     strategy:
       matrix:
-        node-version: [16, 18, 20]
+        node-version: [18]
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -52,8 +50,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache-dependency-path: './starter/frontend/package-lock.json'
-        cache: 'npm'
 
     - name: Install dependencies & Run tests
       run: |
