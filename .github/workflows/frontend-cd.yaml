@@ -76,7 +76,7 @@ jobs:
     - name: Build, tag image and push to ecr
       env:
         IMAGE_NAME: frontend
-        IMAGE_TAG: lastest
+        IMAGE_TAG: latest
         APP_MOVIE_API_URL: http://localhost:5000
       run: |
         docker build -t ${{ env.IMAGE_NAME }} --build-arg=REACT_APP_MOVIE_API_URL=${{ env.APP_MOVIE_API_URL }} .

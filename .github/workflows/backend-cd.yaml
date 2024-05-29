@@ -76,7 +76,7 @@ jobs:
     - name: Build, tag image and push to ecr
       env:
         IMAGE_NAME: backend
-        IMAGE_TAG: lastest
+        IMAGE_TAG: latest
       run: |
         docker build -t ${{ env.IMAGE_NAME }} .
         docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
