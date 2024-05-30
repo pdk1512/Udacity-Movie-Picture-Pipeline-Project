@@ -77,7 +77,7 @@ jobs:
       env:
         IMAGE_NAME: backend
       run: |
-        IMAGE_TAG=${{ github.sha::7 }}
+        IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
         docker build -t ${{ env.IMAGE_NAME }} .
         docker tag ${{ env.IMAGE_NAME }}:$IMAGE_TAG ${{ secrets.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
         docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
@@ -110,6 +110,6 @@ jobs:
     - name: Deploy kubernetes manifests
       run: |
         cd ./starter/backend/k8s
-        IMAGE_TAG=${{ github.sha::7 }}
+        IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
         kustomize edit set image backend=${{ secrets.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
         kustomize build | kubectl apply -f -

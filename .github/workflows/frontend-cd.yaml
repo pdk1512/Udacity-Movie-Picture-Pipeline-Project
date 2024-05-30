@@ -78,7 +78,7 @@ jobs:
         IMAGE_NAME: frontend
         APP_MOVIE_API_URL: http://localhost:5000
       run: |
-        IMAGE_TAG=${{ github.sha::7 }}
+        IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
         docker build -t ${{ env.IMAGE_NAME }} --build-arg=REACT_APP_MOVIE_API_URL=${{ env.APP_MOVIE_API_URL }} .
         docker tag ${{ env.IMAGE_NAME }}:$IMAGE_TAG ${{ secrets.FRONTEND_ECR_REPOSITORY }}:$IMAGE_TAG
         docker push ${{ secrets.FRONTEND_ECR_REPOSITORY }}:$IMAGE_TAG
@@ -111,6 +111,6 @@ jobs:
     - name: Deploy kubernetes manifests
       run: |
         cd ./starter/frontend/k8s
-        IMAGE_TAG=${{ github.sha::7 }}
+        IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
         kustomize edit set image frontend=${{ secrets.FRONTEND_ECR_REPOSITORY }}:$IMAGE_TAG
         kustomize build | kubectl apply -f -
